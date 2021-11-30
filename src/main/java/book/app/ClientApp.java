@@ -6,6 +6,7 @@ package book.app;
 
 import book.service.CategoryService;
 import book.service.CustomerService;
+import book.service.InvoiceService;
 import book.service.ProductService;
 import book.service.UserService;
 import java.net.MalformedURLException;
@@ -25,6 +26,7 @@ public class ClientApp {
     public static ProductService productService;
     public static CategoryService categoryService;
     public static CustomerService customerService;
+    public static InvoiceService invoiceService;
     
     static {
         try {
@@ -33,6 +35,7 @@ public class ClientApp {
             productService = (ProductService) Naming.lookup("rmi://" + HOST + ":" + PORT + "/productService");
             categoryService = (CategoryService) Naming.lookup("rmi://" + HOST + ":" + PORT + "/categoryService");
             customerService = (CustomerService) Naming.lookup("rmi://" + HOST + ":" + PORT + "/customerService");
+            invoiceService = (InvoiceService) Naming.lookup("rmi://" + HOST + ":" + PORT + "/invoiceService");
             System.out.println("Looking for service from registry success...");
         } catch(Exception e) {
             e.printStackTrace();
@@ -66,4 +69,12 @@ public class ClientApp {
         }
         return null;
     }
+    
+    public static InvoiceService getInvoiceService() throws NotBoundException, MalformedURLException, RemoteException {
+        if (invoiceService != null) {
+            return invoiceService;
+        }
+        return null;
+    }
+    
 }
