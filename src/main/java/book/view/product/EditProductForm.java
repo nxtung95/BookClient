@@ -26,6 +26,7 @@ public class EditProductForm extends javax.swing.JFrame {
     private List<CategoryDto> categoryList;
     private JFileChooser jFileChooser1;
     private ProductManagerForm productManagerForm;
+    private String id;
     /**
      * Creates new form AddProductForm
      */
@@ -53,7 +54,7 @@ public class EditProductForm extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
@@ -91,11 +92,11 @@ public class EditProductForm extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
         );
 
         jLabel7.setText("Tác giả");
@@ -256,13 +257,13 @@ public class EditProductForm extends javax.swing.JFrame {
             String path = f.getAbsolutePath();
             ImageIcon imgIcon = new ImageIcon(path);
             Image img = imgIcon.getImage(); 
-            BufferedImage resizedImg = new BufferedImage(jLabel4.getWidth(), jLabel4.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            BufferedImage resizedImg = new BufferedImage(jLabel12.getWidth(), jLabel12.getHeight(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = resizedImg.createGraphics();
 
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g2.drawImage(img, 0, 0, jLabel4.getWidth(), jLabel4.getHeight(), null);
+            g2.drawImage(img, 0, 0, 200, 144, null);
             g2.dispose();
-            jLabel4.setIcon(new ImageIcon(resizedImg));
+            jLabel12.setIcon(new ImageIcon(resizedImg));
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -285,14 +286,14 @@ public class EditProductForm extends javax.swing.JFrame {
         String productId = jTextField2.getText();
         
         ProductController productControl = new ProductController();
-        boolean result = productControl.add(productName, productId, categoryId, price, supplier, image, totalPage, author, publisher);
+        boolean result = productControl.update(Integer.parseInt(id), productName, productId, categoryId, price, supplier, image, totalPage, author, publisher);
         if (result) {
-            JOptionPane.showMessageDialog(rootPane, "Thêm sản phẩm thành công");
+            JOptionPane.showMessageDialog(rootPane, "Cập nhật sản phẩm thành công");
             List<ProductDto> productList = productControl.search("", "", 0, "");
             this.productManagerForm.setProductList(productList);
             this.setVisible(false);
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Thêm sản phẩm thất bại");
+            JOptionPane.showMessageDialog(rootPane, "Cập nhật sản phẩm thất bại");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -340,9 +341,9 @@ public class EditProductForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -368,5 +369,26 @@ public class EditProductForm extends javax.swing.JFrame {
 
     public void setManagerForm(ProductManagerForm aThis) {
         this.productManagerForm = aThis;
+    }
+
+    void setDataSave(List<String> dataSave) {
+        id = dataSave.get(10);
+        jTextField1.setText(dataSave.get(2));
+        jTextField2.setText(dataSave.get(0));
+        jComboBox1.setSelectedItem(0);
+        jTextField3.setText(dataSave.get(4));
+        jTextField7.setText(dataSave.get(5));
+        ImageIcon imgIcon = new ImageIcon(dataSave.get(6));
+        Image img = imgIcon.getImage(); 
+        BufferedImage resizedImg = new BufferedImage(214, 144, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(img, 0, 0, 200, 144, null);
+        g2.dispose();
+        jLabel12.setIcon(new ImageIcon(resizedImg));
+        jTextField6.setText(dataSave.get(8));
+        jTextField4.setText(dataSave.get(7));
+        jTextField5.setText(dataSave.get(9));
     }
 }

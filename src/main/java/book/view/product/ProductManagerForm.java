@@ -12,10 +12,13 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -25,6 +28,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ProductManagerForm extends javax.swing.JInternalFrame {
     private List<CategoryDto> categoryList;
+    private List<ProductDto> productSaveList;
+    private List<String> dataSave;
 
     /**
      * Creates new form ProductManagerForm
@@ -74,6 +79,11 @@ public class ProductManagerForm extends javax.swing.JInternalFrame {
                 "STT", "Mã SP", "Loại SP", "Tên SP", "Số lượng", "Đơn giá", "Nhà cung cấp", "Hình ảnh", "Tác giả", "Số trang", "Nhà xuất bản"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setPreferredWidth(20);
@@ -180,8 +190,18 @@ public class ProductManagerForm extends javax.swing.JInternalFrame {
         });
 
         jButton4.setText("Sửa");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Xóa");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -261,6 +281,71 @@ public class ProductManagerForm extends javax.swing.JInternalFrame {
         addFrom.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int row = jTable1.rowAtPoint(evt.getPoint());
+        int col = 1;
+        if (row >= 0) {
+            dataSave = new ArrayList<>();
+            String productId = (String) jTable1.getValueAt(row, col++);
+            String categoryName = (String) jTable1.getValueAt(row, col++);
+            String productName = (String) jTable1.getValueAt(row, col++);
+            String quantity = String.valueOf(jTable1.getValueAt(row, col++));
+            String price =  String.valueOf(jTable1.getValueAt(row, col++));
+            String supplier =  (String) jTable1.getValueAt(row, col++);
+            col++;
+            String image = productSaveList.stream().filter(p -> p.getProductId().equals(productId)).findFirst().get().getImage();
+            String author = (String) jTable1.getValueAt(row, col++);
+            String totalPage = String.valueOf(jTable1.getValueAt(row, col++));
+            String publisher = (String) jTable1.getValueAt(row, col++);
+            dataSave.add(productId);
+            dataSave.add(categoryName);
+            dataSave.add(productName);
+            dataSave.add(quantity);
+            dataSave.add(price);
+            dataSave.add(supplier);
+            dataSave.add(image);
+            dataSave.add(author);
+            dataSave.add(totalPage);
+            dataSave.add(publisher);
+            dataSave.add(String.valueOf(this.productSaveList.stream().filter(p -> p.getProductId().equals(productId)).findFirst().get().getId()));
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        if (dataSave == null) {
+            JOptionPane.showMessageDialog(rootPane, "Vui long chon san pham de update!!");
+            return;
+        }
+        
+        EditProductForm edit = new EditProductForm();
+        edit.setManagerForm(this);
+        edit.setDataSave(this.dataSave);
+        edit.setCategory(this.categoryList);
+        edit.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        if (dataSave == null) {
+            JOptionPane.showMessageDialog(rootPane, "Vui long chon san pham de xoa!!");
+            return;
+        }
+        int input = JOptionPane.showConfirmDialog(rootPane, "Bạn có chắc chắn muốn xóa san pham này không?");
+        if (input == 0) {
+            ProductController product = new ProductController();
+            boolean result = product.delete(Integer.parseInt(dataSave.get(10)));
+            if (result) {
+                JOptionPane.showMessageDialog(rootPane, "Xoa sản phẩm thành công");
+                List<ProductDto> productList = product.search("", "", 0, "");
+                this.setProductList(productList);
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Xoa sản phẩm thất bại");
+            }
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -284,6 +369,7 @@ public class ProductManagerForm extends javax.swing.JInternalFrame {
 
     public void setProductList(List<ProductDto> products) {
         try {
+            this.productSaveList = products;
             Object[] columnName = {"STT", "Mã SP", "Loại SP", "Tên SP", "Số lượng", "Đơn giá", "Nhà cung cấp", "Hình ảnh", "Tác giả", "Số trang", "Nhà xuất bản"};
             Object[][] listObj = new Object[500][500];
             int index = 0;

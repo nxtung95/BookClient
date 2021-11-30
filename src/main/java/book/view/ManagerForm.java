@@ -5,8 +5,10 @@
 package book.view;
 
 import book.controller.CategoryController;
+import book.controller.CustomerController;
 import book.controller.ProductController;
 import book.dto.CategoryDto;
+import book.dto.CustomerDto;
 import book.dto.ProductDto;
 import book.dto.UserLoginDto;
 import book.view.product.ProductManagerForm;
@@ -254,6 +256,9 @@ public class ManagerForm extends javax.swing.JFrame {
             productForm.setVisible(false);
         }
         customerForm = new CustomerManagerForm();
+        CustomerController customerController = new CustomerController();
+        List<CustomerDto> customerList = customerController.search("", "", "");
+        customerForm.setCustomerList(customerList);
         customerForm.setVisible(true);
         jPanel2.add(customerForm);
     }//GEN-LAST:event_jButton5ActionPerformed

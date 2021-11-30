@@ -7,8 +7,11 @@ package book.controller;
 import book.app.ClientApp;
 import book.dto.ProductDto;
 import book.service.ProductService;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,5 +40,27 @@ public class ProductController {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public boolean update(Integer id, String productName, String productId, int categoryId, String price, String supplier, String image, int totalPage, String author, String publisher) {
+        boolean result = false;
+        try {
+            ProductService productService = ClientApp.getProductService();
+            result = productService.update(id, productName, productId, categoryId, price, supplier, image, totalPage, author, publisher);
+            System.out.println("Add Product, size : " + result);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public boolean delete(int parseInt) {
+        try {
+            ProductService productService = ClientApp.getProductService();
+            return productService.remove(parseInt);
+        } catch (Exception ex) {
+            Logger.getLogger(ProductController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

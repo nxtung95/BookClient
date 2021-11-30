@@ -18,7 +18,9 @@ public class UserController {
         try {
             UserService userService = ClientApp.getUserService();
             user = userService.login(username, password);
-            System.out.println("Login: " + user.toString());
+            if (user != null) {
+              System.out.println("Login: " + user.toString());
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }
